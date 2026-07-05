@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CyberShield AI — Your Personal AI Cybersecurity Guardian</title>
+<meta name="description" content="CyberShield AI protects your digital life before, during, and after a cyber attack — password checks, scam detection, and emergency recovery, all in one place." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L34 9 V19 C34 28 28 34.5 20 37 C12 34.5 6 28 6 19 V9 L20 3Z" stroke="#39ff8c" stroke-width="2" fill="rgba(57,255,140,0.08)"/>
+        <path d="M14 20 L18 24 L27 14" stroke="#39ff8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      CyberShield AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="pages/ai-guardian.html">AI Guardian</a></li>
+      <li><a href="pages/scam-detector.html">Scam Detector</a></li>
+      <li><a href="pages/cyber-time-machine.html">Cyber Time Machine</a></li>
+      <li><a href="pages/digital-mistake-predictor.html">Mistake Predictor</a></li>
+      <li><a href="pages/emergency-kit.html">Emergency Kit</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<header class="hero container">
+  <div class="hero-copy">
+    <span class="eyebrow">AI-Powered Protection</span>
+    <h1>Stay ahead of every<br><span class="highlight">cyber threat.</span></h1>
+    <p>One platform that protects your digital life before, during, and after a cyber attack — password checks, scam detection, and step-by-step recovery, all in one place.</p>
+    <div class="hero-actions">
+      <a href="pages/ai-guardian.html" class="btn btn-primary">Start Protecting</a>
+      <a href="#tools" class="btn btn-ghost">Explore Tools</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b>5</b><span>Protection Tools</span></div>
+      <div class="stat"><b>24/7</b><span>Always Available</span></div>
+      <div class="stat"><b>0</b><span>Data Stored on Servers</span></div>
+    </div>
+  </div>
+
+  <div class="hero-visual" aria-hidden="true">
+    <div class="radar-ring r1"></div>
+    <div class="radar-ring r2"></div>
+    <div class="radar-ring r3"></div>
+    <div class="radar-sweep"></div>
+    <div class="hero-blip" style="top: 22%; left: 68%;"></div>
+    <div class="hero-blip" style="top: 65%; left: 30%; animation-delay: 1.1s;"></div>
+    <div class="hero-blip" style="top: 40%; left: 20%; animation-delay: 0.6s;"></div>
+    <svg class="hero-shield" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 6 L88 20 V48 C88 72 70 88 50 96 C30 88 12 72 12 48 V20 L50 6Z" stroke="#39ff8c" stroke-width="2.5" fill="rgba(5,7,13,0.9)"/>
+      <path d="M35 50 L45 60 L67 36" stroke="#39ff8c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</header>
+
+<!-- ============================ DASHBOARD ============================ -->
+<section class="section container">
+  <div class="section-head reveal">
+    <span class="eyebrow">Live Snapshot</span>
+    <h2>Your security dashboard</h2>
+    <p>A quick read on where your digital hygiene stands right now.</p>
+  </div>
+
+  <div class="dash-grid" data-dashboard>
+    <div class="card dash-card reveal">
+      <span class="dash-label">Threat Level</span>
+      <div class="dash-value" data-value="threatLevel">—</div>
+      <div class="dash-bar"><span data-bar="threatLevel" style="width:0%"></span></div>
+    </div>
+    <div class="card dash-card reveal">
+      <span class="dash-label">Password Health</span>
+      <div class="dash-value" data-value="passwordHealth">—</div>
+      <div class="dash-bar"><span data-bar="passwordHealth" style="width:0%"></span></div>
+    </div>
+    <div class="card dash-card reveal">
+      <span class="dash-label">Scam Alerts</span>
+      <div class="dash-value" data-value="scamAlerts">—</div>
+      <div class="dash-bar"><span data-bar="scamAlerts" style="width:0%"></span></div>
+    </div>
+    <div class="card dash-card reveal">
+      <span class="dash-label">Security Score</span>
+      <div class="dash-value" data-value="securityScore">—</div>
+      <div class="dash-bar"><span data-bar="securityScore" style="width:0%"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TOOLS ============================ -->
+<section class="section container" id="tools">
+  <div class="section-head reveal">
+    <span class="eyebrow">The Toolkit</span>
+    <h2>Five tools. One guardian.</h2>
+    <p>Each one covers a different moment of a digital life — from a weak password to a full-blown emergency.</p>
+  </div>
+
+  <div class="tool-grid">
+    <a href="pages/ai-guardian.html" class="card tool-card reveal">
+      <div class="tool-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2 L21 6 V12 C21 17 17 21 12 22 C7 21 3 17 3 12 V6 L12 2Z" stroke="currentColor" stroke-width="2"/><path d="M12 8V13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+      </div>
+      <h3>AI Guardian</h3>
+      <p>Check password strength, see estimated crack time, and get instant suggestions to make it stronger.</p>
+      <span class="tool-link">Open tool →</span>
+    </a>
+
+    <a href="pages/scam-detector.html" class="card tool-card reveal">
+      <div class="tool-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4H20V17H8L4 21V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="14.5" r="1" fill="currentColor"/></svg>
+      </div>
+      <h3>Scam Detector</h3>
+      <p>Paste any SMS, email, or WhatsApp message and get a risk score with the exact red flags found.</p>
+      <span class="tool-link">Open tool →</span>
+    </a>
+
+    <a href="pages/cyber-time-machine.html" class="card tool-card reveal">
+      <div class="tool-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7V12L15.5 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <h3>Cyber Time Machine</h3>
+      <p>Made a risky click? See what could unfold over the next 5 minutes, 1 hour, a day, and a week.</p>
+      <span class="tool-link">Open tool →</span>
+    </a>
+
+    <a href="pages/digital-mistake-predictor.html" class="card tool-card reveal">
+      <div class="tool-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M13 2 L4 14H11L10 22L20 9H13L13 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Mistake Predictor</h3>
+      <p>Tell it what you're about to do online, and it predicts the risk before you regret it.</p>
+      <span class="tool-link">Open tool →</span>
+    </a>
+
+    <a href="pages/emergency-kit.html" class="card tool-card reveal">
+      <div class="tool-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6V12C4 17 7.5 20.7 12 22C16.5 20.7 20 17 20 12V6L12 2Z" stroke="currentColor" stroke-width="2"/><path d="M9 12H15M12 9V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <h3>Emergency Kit</h3>
+      <p>Already hacked? Get an immediate, step-by-step recovery plan and the contacts you need right now.</p>
+      <span class="tool-link">Open tool →</span>
+    </a>
+
+    <div class="card tool-card reveal">
+      <div class="tool-icon" style="background: var(--violet-dim); color: var(--violet);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2V6M12 18V22M4.9 4.9L7.8 7.8M16.2 16.2L19.1 19.1M2 12H6M18 12H22M4.9 19.1L7.8 16.2M16.2 7.8L19.1 4.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <h3>More on the way</h3>
+      <p>CyberShield AI is actively growing — a live threat map and voice guardian are next on the roadmap.</p>
+      <span class="tool-link" style="color: var(--violet);">Coming soon</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ WIDGETS ============================ -->
+<section class="section container">
+  <div class="widget-grid">
+    <div class="card widget-card reveal">
+      <span class="widget-label">Random Cyber Tip</span>
+      <p data-cyber-tip>Loading tip…</p>
+      <button class="btn btn-ghost btn-sm mt-24" data-tip-refresh>Show another tip</button>
+    </div>
+    <div class="card widget-card reveal">
+      <span class="widget-label">Today's Security Challenge</span>
+      <p data-challenge>Loading challenge…</p>
+    </div>
+    <div class="card widget-card reveal">
+      <span class="widget-label">Latest Cyber News</span>
+      <ul data-news-list style="display:flex; flex-direction:column; gap:4px;">
+        <li class="text-dim">Loading headlines…</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FOOTER ============================ -->
+<footer>
+  <div class="container">
+    <span>© <span data-year></span> CyberShield AI. Made with ❤️ for a safer internet.</span>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#" >Portfolio</a>
+      <a href="README.md">Open Source</a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

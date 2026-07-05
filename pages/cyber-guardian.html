@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Guardian — Password Strength Checker | CyberShield AI</title>
+<meta name="description" content="Check how strong your password really is, see the estimated crack time, and get instant suggestions to make it safer." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="../index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L34 9 V19 C34 28 28 34.5 20 37 C12 34.5 6 28 6 19 V9 L20 3Z" stroke="#39ff8c" stroke-width="2" fill="rgba(57,255,140,0.08)"/>
+        <path d="M14 20 L18 24 L27 14" stroke="#39ff8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      CyberShield AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="ai-guardian.html" class="active">AI Guardian</a></li>
+      <li><a href="scam-detector.html">Scam Detector</a></li>
+      <li><a href="cyber-time-machine.html">Cyber Time Machine</a></li>
+      <li><a href="digital-mistake-predictor.html">Mistake Predictor</a></li>
+      <li><a href="emergency-kit.html">Emergency Kit</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<header class="page-header container">
+  <span class="eyebrow">Tool 01</span>
+  <h1>AI Guardian</h1>
+  <p>Type a password below to see how strong it really is. Nothing is sent anywhere — the check happens entirely in your browser.</p>
+</header>
+
+<section class="section container" style="max-width: 640px; margin: 0 auto;">
+  <div class="card">
+    <div class="field">
+      <label for="pw-input">Your password</label>
+      <input type="password" id="pw-input" placeholder="Type a password to test..." autocomplete="off" />
+    </div>
+    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--text-dim); margin-bottom: 8px;">
+      <input type="checkbox" id="pw-show" style="width:16px;height:16px;accent-color:var(--green);" />
+      Show password
+    </label>
+
+    <div class="meter-label">
+      <span id="pw-status">Waiting for input</span>
+      <span id="pw-score-label"></span>
+    </div>
+    <div class="meter-track">
+      <div class="meter-fill" id="pw-meter"></div>
+    </div>
+    <p class="crack-time">Estimated crack time: <strong id="pw-crack-time">—</strong></p>
+
+    <ul class="suggestion-list" id="pw-suggestions"></ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>© <span data-year></span> CyberShield AI. Made with ❤️ for a safer internet.</span>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#">Portfolio</a>
+      <a href="../README.md">Open Source</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+<script src="../script.js"></script>
+<script>
+  const pwInput = document.getElementById("pw-input");
+  const pwShow = document.getElementById("pw-show");
+  const pwStatus = document.getElementById("pw-status");
+  const pwScoreLabel = document.getElementById("pw-score-label");
+  const pwMeter = document.getElementById("pw-meter");
+  const pwCrackTime = document.getElementById("pw-crack-time");
+  const pwSuggestions = document.getElementById("pw-suggestions");
+
+  const LABELS = [
+    { text: "Very Weak", color: "var(--danger)" },
+    { text: "Weak", color: "var(--danger)" },
+    { text: "Medium", color: "var(--warning)" },
+    { text: "Strong", color: "var(--green)" },
+    { text: "Very Strong", color: "var(--green)" },
+  ];
+
+  pwShow.addEventListener("change", () => {
+    pwInput.type = pwShow.checked ? "text" : "password";
+  });
+
+  pwInput.addEventListener("input", () => {
+    const value = pwInput.value;
+
+    if (!value) {
+      pwStatus.textContent = "Waiting for input";
+      pwScoreLabel.textContent = "";
+      pwMeter.style.width = "0%";
+      pwCrackTime.textContent = "—";
+      pwSuggestions.innerHTML = "";
+      return;
+    }
+
+    // zxcvbn (loaded via CDN) gives a realistic strength estimate,
+    // not just a length/character-type checklist.
+    const result = typeof zxcvbn === "function" ? zxcvbn(value) : fallbackScore(value);
+    const label = LABELS[result.score];
+
+    pwStatus.textContent = label.text;
+    pwStatus.style.color = label.color;
+    pwScoreLabel.textContent = `${result.score + 1} / 5`;
+    pwMeter.style.width = `${(result.score + 1) * 20}%`;
+    pwMeter.style.background = label.color;
+
+    const crackTime =
+      result.crack_times_display?.offline_slow_hashing_1e4_per_second ||
+      "unknown";
+    pwCrackTime.textContent = crackTime;
+
+    const suggestions = [];
+    if (value.length < 12) suggestions.push("Use at least 12 characters — length matters more than complexity.");
+    if (!/[A-Z]/.test(value)) suggestions.push("Add an uppercase letter.");
+    if (!/[0-9]/.test(value)) suggestions.push("Add a number.");
+    if (!/[^A-Za-z0-9]/.test(value)) suggestions.push("Add a symbol like ! @ # or %.");
+    if (result.feedback?.warning) suggestions.push(result.feedback.warning);
+    (result.feedback?.suggestions || []).forEach((s) => suggestions.push(s));
+    if (!suggestions.length) suggestions.push("This password looks solid. Consider a password manager to keep it unique per site.");
+
+    pwSuggestions.innerHTML = [...new Set(suggestions)]
+      .map((s) => `<li><span style="color:var(--green);">✓</span> ${s}</li>`)
+      .join("");
+  });
+
+  // Basic fallback if the CDN fails to load (e.g. offline).
+  function fallbackScore(value) {
+    let score = 0;
+    if (value.length >= 8) score++;
+    if (value.length >= 12) score++;
+    if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score++;
+    if (/[0-9]/.test(value)) score++;
+    if (/[^A-Za-z0-9]/.test(value)) score++;
+    score = Math.min(4, Math.floor(score * 0.9));
+    return { score, crack_times_display: { offline_slow_hashing_1e4_per_second: "estimate unavailable offline" }, feedback: { warning: "", suggestions: [] } };
+  }
+</script>
+</body>
+</html>

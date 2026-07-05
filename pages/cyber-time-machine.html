@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cyber Time Machine — See What Happens Next | CyberShield AI</title>
+<meta name="description" content="Tell CyberShield AI what you clicked, shared, or installed, and see a simulated timeline of what could happen over the next week." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="../index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L34 9 V19 C34 28 28 34.5 20 37 C12 34.5 6 28 6 19 V9 L20 3Z" stroke="#39ff8c" stroke-width="2" fill="rgba(57,255,140,0.08)"/>
+        <path d="M14 20 L18 24 L27 14" stroke="#39ff8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      CyberShield AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="ai-guardian.html">AI Guardian</a></li>
+      <li><a href="scam-detector.html">Scam Detector</a></li>
+      <li><a href="cyber-time-machine.html" class="active">Cyber Time Machine</a></li>
+      <li><a href="digital-mistake-predictor.html">Mistake Predictor</a></li>
+      <li><a href="emergency-kit.html">Emergency Kit</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<header class="page-header container">
+  <span class="eyebrow">Tool 03 · Signature Feature</span>
+  <h1>Cyber Time Machine</h1>
+  <p>Tell it what just happened. It simulates how the situation could unfold — and what to do at each stage.</p>
+</header>
+
+<section class="section container" style="max-width: 760px; margin: 0 auto;">
+  <div class="card">
+    <h3 class="mt-24" style="margin-bottom: 16px;">What happened?</h3>
+    <div class="checkbox-list" id="event-list">
+      <label class="check-item"><input type="checkbox" value="link" /> Clicked a suspicious link</label>
+      <label class="check-item"><input type="checkbox" value="file" /> Downloaded an unknown file</label>
+      <label class="check-item"><input type="checkbox" value="otp" /> Entered an OTP</label>
+      <label class="check-item"><input type="checkbox" value="password" /> Shared a password</label>
+      <label class="check-item"><input type="checkbox" value="apk" /> Installed an APK from outside the app store</label>
+      <label class="check-item"><input type="checkbox" value="wifi" /> Used public Wi-Fi for something sensitive</label>
+    </div>
+    <button class="btn btn-primary btn-block mt-24" id="simulate-btn">Simulate What Happens Next</button>
+  </div>
+
+  <div id="timeline-wrap" style="display:none;">
+    <div class="card mt-40">
+      <h3>Simulated timeline</h3>
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>© <span data-year></span> CyberShield AI. Made with ❤️ for a safer internet.</span>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#">Portfolio</a>
+      <a href="../README.md">Open Source</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>
+  /*
+   * Each selected event contributes possible consequences at each
+   * time horizon. We merge and de-duplicate across all selected
+   * events, then render as an animated timeline.
+   */
+
+  const EVENT_DATA = {
+    link: {
+      "5 minutes": "The link may have already logged your device details, IP address, or opened a fake login page designed to steal credentials.",
+      "1 hour": "If it was a phishing page and you entered anything, that data may already be in a scammer's hands or an automated script.",
+      "24 hours": "Expect possible follow-up messages pretending to be your bank, or unusual login alerts on accounts that share the same password.",
+      "7 days": "If no credentials were entered, risk drops sharply. If they were, expect potential unauthorized transactions or account takeovers by this point.",
+    },
+    file: {
+      "5 minutes": "The file may already be running in the background if it contained malware — some malicious files execute silently.",
+      "1 hour": "Malware could begin scanning your device for saved passwords, photos, or contacts to exfiltrate.",
+      "24 hours": "You might notice battery drain, pop-ups, or unfamiliar apps — signs of infection worth acting on immediately.",
+      "7 days": "Without cleanup, malware can spread to other devices on the same network or be used for further attacks in your name.",
+    },
+    otp: {
+      "5 minutes": "Whoever received the OTP may have already completed a login, password reset, or transaction using it.",
+      "1 hour": "Check bank and email accounts for any activity you didn't initiate — the earlier this is caught, the easier it is to reverse.",
+      "24 hours": "Unauthorized transactions, if any occurred, are usually visible in statements by now — report immediately if found.",
+      "7 days": "Banks generally investigate fraud claims filed quickly; delays past a week make recovery harder in many cases.",
+    },
+    password: {
+      "5 minutes": "Anyone with the password can log in immediately if they also have your username or email.",
+      "1 hour": "Watch for account-recovery emails or login notifications you didn't request.",
+      "24 hours": "If the password is reused elsewhere, other accounts using it are now at risk too.",
+      "7 days": "Un-changed shared passwords remain a standing risk indefinitely — this window doesn't close on its own.",
+    },
+    apk: {
+      "5 minutes": "Sideloaded APKs can request broad permissions instantly — camera, SMS, contacts, and accessibility access.",
+      "1 hour": "Malicious APKs often begin reading OTP SMS messages to bypass two-factor authentication on banking apps.",
+      "24 hours": "Unusual permission pop-ups, background data usage, or new admin-level app access are common warning signs.",
+      "7 days": "Devices with lingering malicious APKs are frequently used for further fraud, including on the owner's own contacts.",
+    },
+    wifi: {
+      "5 minutes": "On an unsecured network, traffic to non-HTTPS sites can potentially be intercepted in real time.",
+      "1 hour": "Session cookies for sites visited over that network could be captured, letting someone impersonate your logged-in session.",
+      "24 hours": "If anything sensitive was accessed, it's worth changing that password from a trusted, secure network.",
+      "7 days": "Risk is largely tied to that single session — the main lasting concern is any credentials that were reused elsewhere.",
+    },
+  };
+
+  const RECOVERY_STEPS = {
+    link: "Run a security scan, and change the password for any account whose login page you saw.",
+    file: "Disconnect from the internet, run a full antivirus scan, and delete the file without opening it again.",
+    otp: "Immediately check the linked account's recent activity and contact the bank or service if anything looks unfamiliar.",
+    password: "Change that password everywhere it was reused, starting with email and banking.",
+    apk: "Uninstall the APK, run a security scan, and revoke any unfamiliar app permissions in your phone's settings.",
+    wifi: "Avoid that network for sensitive logins going forward, and change passwords for anything accessed while connected.",
+  };
+
+  const HORIZONS = ["5 minutes", "1 hour", "24 hours", "7 days"];
+
+  const eventList = document.getElementById("event-list");
+  const simulateBtn = document.getElementById("simulate-btn");
+  const timelineWrap = document.getElementById("timeline-wrap");
+  const timelineEl = document.getElementById("timeline");
+
+  eventList.querySelectorAll(".check-item").forEach((label) => {
+    const input = label.querySelector("input");
+    input.addEventListener("change", () => label.classList.toggle("checked", input.checked));
+  });
+
+  simulateBtn.addEventListener("click", () => {
+    const selected = [...eventList.querySelectorAll("input:checked")].map((i) => i.value);
+
+    if (!selected.length) {
+      timelineWrap.style.display = "none";
+      return;
+    }
+
+    timelineEl.innerHTML = "";
+
+    HORIZONS.forEach((horizon, i) => {
+      const messages = selected
+        .map((key) => EVENT_DATA[key]?.[horizon])
+        .filter(Boolean);
+
+      const item = document.createElement("div");
+      item.className = "timeline-item";
+      item.style.animationDelay = `${i * 0.15}s`;
+      item.innerHTML = `
+        <div class="t-when">${horizon}</div>
+        <h4>${horizon === "7 days" ? "One week later" : "What could happen"}</h4>
+        <p>${messages.join(" ")}</p>
+      `;
+      timelineEl.appendChild(item);
+    });
+
+    const recovery = document.createElement("div");
+    recovery.className = "timeline-item";
+    recovery.style.animationDelay = `${HORIZONS.length * 0.15}s`;
+    recovery.innerHTML = `
+      <div class="t-when" style="color: var(--violet);">Recovery Plan</div>
+      <h4>What to do right now</h4>
+      <ul style="color: var(--text-dim); font-size:0.92rem; padding-left: 18px; display:flex; flex-direction:column; gap:6px;">
+        ${selected.map((key) => `<li>${RECOVERY_STEPS[key]}</li>`).join("")}
+      </ul>
+    `;
+    timelineEl.appendChild(recovery);
+
+    timelineWrap.style.display = "block";
+    timelineWrap.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+</script>
+</body>
+</html>

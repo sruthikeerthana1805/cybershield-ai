@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Digital Mistake Predictor | CyberShield AI</title>
+<meta name="description" content="Tell CyberShield AI what you're about to do online, and get a risk score, likely attack scenario, and a safer alternative — before you regret it." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="../index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L34 9 V19 C34 28 28 34.5 20 37 C12 34.5 6 28 6 19 V9 L20 3Z" stroke="#39ff8c" stroke-width="2" fill="rgba(57,255,140,0.08)"/>
+        <path d="M14 20 L18 24 L27 14" stroke="#39ff8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      CyberShield AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="ai-guardian.html">AI Guardian</a></li>
+      <li><a href="scam-detector.html">Scam Detector</a></li>
+      <li><a href="cyber-time-machine.html">Cyber Time Machine</a></li>
+      <li><a href="digital-mistake-predictor.html" class="active">Mistake Predictor</a></li>
+      <li><a href="emergency-kit.html">Emergency Kit</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<header class="page-header container">
+  <span class="eyebrow">Tool 04</span>
+  <h1>Digital Mistake Predictor</h1>
+  <p>I am about to&hellip; pick what you're considering, and see the risk before you do it.</p>
+</header>
+
+<section class="section container" style="max-width: 760px; margin: 0 auto;">
+  <div class="card">
+    <label for="action-select" style="display:block; font-size:0.85rem; color:var(--text-dim); margin-bottom:10px;">I am about to...</label>
+    <select id="action-select">
+      <option value="">Select an activity</option>
+      <option value="cracked">Install cracked / pirated software</option>
+      <option value="qr">Scan a random QR code</option>
+      <option value="wifi">Connect to public Wi-Fi</option>
+      <option value="apk">Download an APK from a link</option>
+      <option value="attachment">Open an unknown email attachment</option>
+      <option value="reuse">Reuse a password across sites</option>
+      <option value="birthday">Use my birthday as a password</option>
+    </select>
+    <button class="btn btn-primary btn-block mt-24" id="predict-btn">Predict the Risk</button>
+
+    <div class="result-panel" id="result-panel">
+      <div class="mt-40">
+        <span class="risk-badge" id="risk-badge">—</span>
+        <div class="risk-percent" id="risk-percent">0%</div>
+      </div>
+
+      <div class="grid-2 mt-24">
+        <div>
+          <h4 style="margin-bottom:8px;">Likely attack</h4>
+          <p class="text-dim" id="attack-text">—</p>
+        </div>
+        <div>
+          <h4 style="margin-bottom:8px;">Safer alternative</h4>
+          <p class="text-dim" id="alt-text">—</p>
+        </div>
+      </div>
+
+      <h4 class="mt-24" style="margin-bottom: 10px;">Prevention checklist</h4>
+      <ul class="suggestion-list" id="prevention-list"></ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>© <span data-year></span> CyberShield AI. Made with ❤️ for a safer internet.</span>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#">Portfolio</a>
+      <a href="../README.md">Open Source</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>
+  const PREDICTIONS = {
+    cracked: {
+      risk: 82,
+      attack: "Cracked software is one of the most common ways malware and spyware get installed, often bundled silently with the \"crack\" itself.",
+      alt: "Use free, legitimate alternatives (like LibreOffice instead of pirated MS Office) or wait for a legitimate discount or trial.",
+      prevention: ["Only install software from official sites or verified app stores.", "Check reviews and file hashes before running any installer.", "Keep antivirus active and updated."],
+    },
+    qr: {
+      risk: 58,
+      attack: "\"Quishing\" — a malicious QR code can silently redirect to a phishing page or trigger an unwanted app install/payment.",
+      alt: "Use your phone's camera preview to check the URL before opening it, or ask the source directly for a plain link.",
+      prevention: ["Preview the link before tapping through.", "Avoid QR codes from unattended public posters or stickers.", "Use a QR scanner app that shows the destination URL first."],
+    },
+    wifi: {
+      risk: 45,
+      attack: "On an open network, traffic can potentially be intercepted, and fake look-alike hotspots can capture your login sessions.",
+      alt: "Use your mobile data or a trusted personal hotspot for anything involving accounts or payments.",
+      prevention: ["Confirm the exact network name with staff before connecting.", "Use a VPN if you must use public Wi-Fi for sensitive tasks.", "Avoid logging into banking or email on open networks."],
+    },
+    apk: {
+      risk: 76,
+      attack: "APKs from outside the Play Store commonly request excessive permissions and are a leading vector for SMS/OTP-stealing malware.",
+      alt: "Search for the same app on the official Google Play Store or Apple App Store instead.",
+      prevention: ["Never enable \"install from unknown sources\" for a link you weren't expecting.", "Check the developer name and review count before installing anything.", "Review app permissions immediately after installing."],
+    },
+    attachment: {
+      risk: 68,
+      attack: "Unknown attachments are a classic delivery method for malware, especially disguised as invoices, resumes, or shipment notices.",
+      alt: "Ask the sender to confirm they sent it through a separate channel, or open it in a sandboxed viewer like Google's preview instead of downloading.",
+      prevention: ["Never open .exe, .scr, or macro-enabled files from unknown senders.", "Hover over the sender address to confirm it matches who it claims to be.", "Scan attachments with antivirus before opening."],
+    },
+    reuse: {
+      risk: 63,
+      attack: "If any one site suffers a breach, the same password can be used to take over every other account it's reused on — a technique called credential stuffing.",
+      alt: "Use a password manager to generate and store a unique password for every account.",
+      prevention: ["Change reused passwords one account at a time, starting with email and banking.", "Turn on two-factor authentication as a backup layer.", "Check haveibeenpwned.com to see if a password has already leaked."],
+    },
+    birthday: {
+      risk: 71,
+      attack: "Birthday-based passwords are among the first patterns automated cracking tools and guessers try, especially with public social media dates.",
+      alt: "Use a random passphrase (three unrelated words plus a symbol) or a password manager's generator.",
+      prevention: ["Avoid dates, names, or anything findable on your social media.", "Use at least 12 characters mixing case, numbers, and symbols.", "Store it in a password manager instead of memorizing a weak one."],
+    },
+  };
+
+  const select = document.getElementById("action-select");
+  const predictBtn = document.getElementById("predict-btn");
+  const panel = document.getElementById("result-panel");
+  const badge = document.getElementById("risk-badge");
+  const percentEl = document.getElementById("risk-percent");
+  const attackText = document.getElementById("attack-text");
+  const altText = document.getElementById("alt-text");
+  const preventionList = document.getElementById("prevention-list");
+
+  predictBtn.addEventListener("click", () => {
+    const key = select.value;
+    if (!key) {
+      select.focus();
+      return;
+    }
+
+    const data = PREDICTIONS[key];
+    const tier = data.risk >= 65 ? "danger" : data.risk >= 40 ? "caution" : "safe";
+
+    badge.className = `risk-badge ${tier}`;
+    badge.textContent = tier === "danger" ? "High Risk" : tier === "caution" ? "Moderate Risk" : "Low Risk";
+    percentEl.textContent = `${data.risk}%`;
+    percentEl.style.color = tier === "danger" ? "var(--danger)" : tier === "caution" ? "var(--warning)" : "var(--green)";
+    attackText.textContent = data.attack;
+    altText.textContent = data.alt;
+    preventionList.innerHTML = data.prevention
+      .map((p) => `<li><span style="color:var(--green);">✓</span> ${p}</li>`)
+      .join("");
+
+    panel.classList.add("visible");
+  });
+</script>
+</body>
+</html>

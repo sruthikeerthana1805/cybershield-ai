@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cyber Emergency Kit — Step-by-Step Recovery | CyberShield AI</title>
+<meta name="description" content="Already hacked or lost a device? Get an immediate step-by-step recovery plan and emergency contacts for common cyber incidents." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="../index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L34 9 V19 C34 28 28 34.5 20 37 C12 34.5 6 28 6 19 V9 L20 3Z" stroke="#39ff8c" stroke-width="2" fill="rgba(57,255,140,0.08)"/>
+        <path d="M14 20 L18 24 L27 14" stroke="#39ff8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      CyberShield AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="ai-guardian.html">AI Guardian</a></li>
+      <li><a href="scam-detector.html">Scam Detector</a></li>
+      <li><a href="cyber-time-machine.html">Cyber Time Machine</a></li>
+      <li><a href="digital-mistake-predictor.html">Mistake Predictor</a></li>
+      <li><a href="emergency-kit.html" class="active">Emergency Kit</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<header class="page-header container">
+  <span class="eyebrow">Tool 05</span>
+  <h1>Cyber Emergency Kit</h1>
+  <p>Pick what's happening right now. You'll get an immediate step-by-step plan and the contacts you need.</p>
+</header>
+
+<section class="section container">
+  <div class="emergency-grid" id="emergency-grid">
+    <button class="card emergency-btn" data-key="phone-lost"><span class="e-icon">📱</span>Lost Phone</button>
+    <button class="card emergency-btn" data-key="email-hacked"><span class="e-icon">✉️</span>Email Hacked</button>
+    <button class="card emergency-btn" data-key="instagram-hacked"><span class="e-icon">📷</span>Instagram Hacked</button>
+    <button class="card emergency-btn" data-key="upi-fraud"><span class="e-icon">💳</span>UPI Fraud</button>
+    <button class="card emergency-btn" data-key="card-fraud"><span class="e-icon">💰</span>Credit Card Fraud</button>
+    <button class="card emergency-btn" data-key="laptop-stolen"><span class="e-icon">💻</span>Laptop Stolen</button>
+    <button class="card emergency-btn" data-key="phone-stolen"><span class="e-icon">🚨</span>Phone Stolen</button>
+    <button class="card emergency-btn" data-key="sim-swap"><span class="e-icon">📶</span>SIM Swapped</button>
+  </div>
+
+  <div class="card emergency-detail" id="emergency-detail">
+    <h3 id="detail-title">—</h3>
+    <ol class="step-list" id="detail-steps"></ol>
+    <h4 class="mt-24" style="margin-bottom: 8px;">Emergency contacts</h4>
+    <div class="contact-grid" id="detail-contacts"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>© <span data-year></span> CyberShield AI. Made with ❤️ for a safer internet.</span>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#">Portfolio</a>
+      <a href="../README.md">Open Source</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>
+  const SCENARIOS = {
+    "phone-lost": {
+      title: "Lost Phone",
+      steps: [
+        "Try Google's Find My Device (Android) or Find My iPhone (iOS) to locate, lock, or wipe it remotely.",
+        "Lock the device remotely and display a message with an alternate contact number.",
+        "Change passwords for accounts that were logged in on the phone, starting with email.",
+        "Contact your carrier to suspend the SIM temporarily so it can't be used for calls or OTPs.",
+        "If it doesn't turn up within a reasonable time, file a police report using the phone's IMEI number.",
+      ],
+      contacts: [["Cyber Crime Helpline (India)", "1930"], ["Google Find My Device", "google.com/android/find"], ["Apple Find My", "icloud.com/find"]],
+    },
+    "email-hacked": {
+      title: "Email Hacked",
+      steps: [
+        "Try resetting the password immediately using the account recovery flow.",
+        "Check and remove any unfamiliar forwarding rules, recovery emails, or linked devices.",
+        "Enable two-factor authentication as soon as you regain access.",
+        "Review recent \"sent\" emails for anything sent without your knowledge, and warn contacts if needed.",
+        "Change passwords for any other account that used this email for recovery.",
+      ],
+      contacts: [["Cyber Crime Helpline (India)", "1930"], ["Gmail Account Recovery", "g.co/recover"], ["Outlook Account Recovery", "account.live.com/acsr"]],
+    },
+    "instagram-hacked": {
+      title: "Instagram Hacked",
+      steps: [
+        "Use Instagram's \"forgot password\" flow from the login screen to try to regain access.",
+        "If the email/phone was changed by the attacker, use Instagram's dedicated hacked-account report form.",
+        "Once back in, revoke sessions on unfamiliar devices from Settings → Security → Login Activity.",
+        "Enable two-factor authentication immediately.",
+        "Warn your followers if the account posted or messaged anything suspicious while compromised.",
+      ],
+      contacts: [["Cyber Crime Helpline (India)", "1930"], ["Instagram Hacked Account Form", "instagram.com/hacked"]],
+    },
+    "upi-fraud": {
+      title: "UPI Fraud",
+      steps: [
+        "Immediately block your UPI ID and freeze the linked bank account via your bank's app or helpline.",
+        "Call your bank's fraud helpline right away — most banks can attempt to halt a transaction within a short window.",
+        "File a complaint on the National Cyber Crime Reporting Portal.",
+        "Report the fraudulent transaction inside your UPI app (GPay, PhonePe, Paytm all have a report-fraud option).",
+        "Keep screenshots of the transaction and any messages as evidence.",
+      ],
+      contacts: [["Cyber Crime Helpline (India)", "1930"], ["National Cyber Crime Portal", "cybercrime.gov.in"], ["RBI Banking Ombudsman", "cms.rbi.org.in"]],
+    },
+    "card-fraud": {
+      title: "Credit Card Fraud",
+      steps: [
+        "Call your card issuer's 24/7 fraud helpline to block the card immediately.",
+        "Dispute the unauthorized transaction formally with your bank in writing.",
+        "Change your online banking password and enable transaction alerts if not already on.",
+        "File a complaint on the National Cyber Crime Reporting Portal for a formal record.",
+        "Monitor your statement closely for the next few billing cycles.",
+      ],
+      contacts: [["Cyber Crime Helpline (India)", "1930"], ["National Cyber Crime Portal", "cybercrime.gov.in"]],
+    },
+    "laptop-stolen": {
+      title: "Laptop Stolen",
+      steps: [
+        "If enabled, use Find My Mac or Windows' Find My Device to locate or remotely lock it.",
+        "Change passwords for any accounts that were logged in or saved in a browser on the device.",
+        "Revoke active sessions for cloud accounts (Google, Microsoft, iCloud) from their security settings.",
+        "Report the theft to the police and get a written FIR copy — often required for insurance claims.",
+        "If it had disk encryption (BitLocker/FileVault) off, treat any stored files as potentially exposed.",
+      ],
+      contacts: [["Cyber Crime Helpline (India)", "1930"], ["Local Police Non-Emergency Line", "100 (India)"]],
+    },
+    "phone-stolen": {
+      title: "Phone Stolen",
+      steps: [
+        "Immediately call your carrier to block the SIM and prevent OTP interception.",
+        "Use Find My Device / Find My iPhone to remotely lock or erase the device.",
+        "Change passwords for email, banking, and social accounts from another device.",
+        "File a police report with the phone's IMEI number (dial *#06# on a similar phone to find yours in advance).",
+        "Report the theft on your country's central device-blocking portal if available (e.g. CEIR in India).",
+      ],
+      contacts: [["Cyber Crime Helpline (India)", "1930"], ["CEIR Device Blocking (India)", "ceir.gov.in"]],
+    },
+    "sim-swap": {
+      title: "SIM Swapped",
+      steps: [
+        "Call your carrier immediately if your SIM suddenly loses signal unexpectedly — this is the first sign of a swap.",
+        "Ask the carrier to block the fraudulent SIM and restore service on your original one.",
+        "Change your email and banking passwords right away from a trusted device, since OTPs may have been intercepted.",
+        "Check bank and email accounts for any unauthorized activity during the window the SIM was compromised.",
+        "Ask your bank to flag your account for suspicious activity while you secure everything.",
+      ],
+      contacts: [["Cyber Crime Helpline (India)", "1930"], ["Telecom Carrier Fraud Line", "Check your carrier's app or SIM card"]],
+    },
+  };
+
+  const grid = document.getElementById("emergency-grid");
+  const detail = document.getElementById("emergency-detail");
+  const detailTitle = document.getElementById("detail-title");
+  const detailSteps = document.getElementById("detail-steps");
+  const detailContacts = document.getElementById("detail-contacts");
+
+  grid.querySelectorAll(".emergency-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      grid.querySelectorAll(".emergency-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const data = SCENARIOS[btn.dataset.key];
+      detailTitle.textContent = data.title;
+      detailSteps.innerHTML = data.steps.map((s) => `<li>${s}</li>`).join("");
+      detailContacts.innerHTML = data.contacts
+        .map(([label, value]) => `<div class="contact-chip"><span>${label}</span><b>${value}</b></div>`)
+        .join("");
+
+      detail.classList.add("visible");
+      detail.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+</script>
+</body>
+</html>

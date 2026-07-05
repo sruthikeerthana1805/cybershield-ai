@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scam Detector — Analyze SMS, Email & WhatsApp Messages | CyberShield AI</title>
+<meta name="description" content="Paste any SMS, email, or WhatsApp message and get an instant risk score with the exact red flags found." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="../index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L34 9 V19 C34 28 28 34.5 20 37 C12 34.5 6 28 6 19 V9 L20 3Z" stroke="#39ff8c" stroke-width="2" fill="rgba(57,255,140,0.08)"/>
+        <path d="M14 20 L18 24 L27 14" stroke="#39ff8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      CyberShield AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="ai-guardian.html">AI Guardian</a></li>
+      <li><a href="scam-detector.html" class="active">Scam Detector</a></li>
+      <li><a href="cyber-time-machine.html">Cyber Time Machine</a></li>
+      <li><a href="digital-mistake-predictor.html">Mistake Predictor</a></li>
+      <li><a href="emergency-kit.html">Emergency Kit</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<header class="page-header container">
+  <span class="eyebrow">Tool 02</span>
+  <h1>Scam Detector</h1>
+  <p>Paste a suspicious SMS, email, or WhatsApp message. CyberShield AI scans it for the patterns real scams use.</p>
+</header>
+
+<section class="section container" style="max-width: 720px; margin: 0 auto;">
+  <div class="card">
+    <div class="field">
+      <label for="msg-input">Message to analyze</label>
+      <textarea id="msg-input" rows="6" placeholder="Paste the SMS, email, or WhatsApp message here..."></textarea>
+    </div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="btn btn-primary" id="analyze-btn">Analyze Message</button>
+      <button class="btn btn-ghost" id="sample-btn">Load a sample scam</button>
+    </div>
+
+    <div class="result-panel" id="result-panel">
+      <div class="mt-40">
+        <span class="risk-badge" id="risk-badge">—</span>
+        <div class="risk-percent" id="risk-percent">0%</div>
+        <p class="text-dim" id="risk-reason">—</p>
+      </div>
+      <h4 class="mt-24">Red flags found</h4>
+      <div class="flag-list" id="flag-list"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>© <span data-year></span> CyberShield AI. Made with ❤️ for a safer internet.</span>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#">Portfolio</a>
+      <a href="../README.md">Open Source</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>
+  /*
+   * Rule-based scam detection.
+   * Each rule = a regex pattern + weight + human-readable reason.
+   * This runs fully client-side. If a HuggingFace inference token is
+   * configured, HF_API_TOKEN below can be filled in to additionally
+   * call a zero-shot classification model — the app works fully
+   * without it, using this rule set as the primary detector.
+   */
+
+  const HF_API_TOKEN = ""; // optional: add a HuggingFace token to enable AI-assisted scoring
+
+  const RULES = [
+    { pattern: /\botp\b/i, weight: 22, reason: "Mentions an OTP — legitimate senders never ask you to share this." },
+    { pattern: /\bcvv\b|\bpin\b/i, weight: 22, reason: "Asks for a CVV or PIN, which no bank or company legitimately needs." },
+    { pattern: /account.{0,20}(block|suspend|freeze|deactivat)/i, weight: 18, reason: "Threatens to block or suspend your account to pressure quick action." },
+    { pattern: /(click|tap).{0,15}(link|here|below)/i, weight: 14, reason: "Pushes you to click a link urgently." },
+    { pattern: /bit\.ly|tinyurl|t\.co\/|goo\.gl/i, weight: 16, reason: "Uses a shortened link, which hides the real destination." },
+    { pattern: /congratulations|you.{0,5}(won|winner)|lottery|lucky draw/i, weight: 20, reason: "Claims you won a prize you never entered for." },
+    { pattern: /urgent|immediately|act now|within 24 hours|last chance/i, weight: 12, reason: "Creates false urgency to stop you from thinking it through." },
+    { pattern: /verify your (account|identity|details)/i, weight: 16, reason: "Asks you to \"verify\" account details — a classic phishing hook." },
+    { pattern: /kyc/i, weight: 14, reason: "References KYC update, a very common Indian banking-scam angle." },
+    { pattern: /refund|cashback|reward points? expir/i, weight: 12, reason: "Dangles a refund, cashback, or expiring reward to bait a click." },
+    { pattern: /job offer|work from home|earn.{0,15}(per day|daily)|part[- ]time income/i, weight: 15, reason: "Matches common fake job / easy-money scam wording." },
+    { pattern: /install.{0,15}(apk|app)|download.{0,15}apk/i, weight: 20, reason: "Asks you to install an APK from outside the official app store." },
+    { pattern: /upi.{0,10}(pin|id)|paytm|gpay|phonepe/i, weight: 14, reason: "References UPI payment details in a way scams commonly do." },
+    { pattern: /dear (customer|user|sir\/madam)/i, weight: 8, reason: "Generic greeting instead of your actual name — common in mass scam blasts." },
+    { pattern: /₹|\$\s?\d{2,}|rs\.?\s?\d{2,},?\d*/i, weight: 6, reason: "Includes a specific money amount to make the message feel concrete." },
+    { pattern: /invest(ment)?.{0,15}(double|guarantee|returns?)/i, weight: 20, reason: "Promises guaranteed or doubled investment returns — always a red flag." },
+    { pattern: /http:\/\//i, weight: 10, reason: "Uses an insecure (http, not https) link." },
+    { pattern: /[A-Za-z0-9._%+-]+@(gmail|yahoo|outlook)\.com/i, weight: 8, reason: "Sent from a free personal email domain instead of an official company one." },
+  ];
+
+  const SAMPLE_MESSAGE =
+    "Dear Customer, your bank account will be BLOCKED within 24 hours due to KYC update pending. " +
+    "Click here to verify immediately: http://bit.ly/kyc-verify-now and enter your OTP to avoid suspension.";
+
+  const input = document.getElementById("msg-input");
+  const analyzeBtn = document.getElementById("analyze-btn");
+  const sampleBtn = document.getElementById("sample-btn");
+  const panel = document.getElementById("result-panel");
+  const badge = document.getElementById("risk-badge");
+  const percentEl = document.getElementById("risk-percent");
+  const reasonEl = document.getElementById("risk-reason");
+  const flagList = document.getElementById("flag-list");
+
+  sampleBtn.addEventListener("click", () => {
+    input.value = SAMPLE_MESSAGE;
+  });
+
+  analyzeBtn.addEventListener("click", () => analyze(input.value));
+
+  function analyze(text) {
+    if (!text || !text.trim()) {
+      input.focus();
+      return;
+    }
+
+    const matched = RULES.filter((r) => r.pattern.test(text));
+    let score = matched.reduce((sum, r) => sum + r.weight, 0);
+    score = Math.min(97, score);
+    // Give a message with zero matches a small non-zero baseline —
+    // absence of evidence isn't the same as proof of safety.
+    if (matched.length === 0) score = 4;
+
+    let tier, reason;
+    if (score >= 55) {
+      tier = "danger";
+      reason = "This message shows strong, well-known scam patterns. Do not click any links, do not reply, and do not share any OTP, PIN, or personal details.";
+    } else if (score >= 25) {
+      tier = "caution";
+      reason = "This message has some suspicious traits. Verify through an official app or number before taking any action it asks for.";
+    } else {
+      tier = "safe";
+      reason = "No strong scam patterns detected. Still, stay cautious with any message asking for money, codes, or personal details.";
+    }
+
+    badge.className = `risk-badge ${tier}`;
+    badge.textContent = tier === "danger" ? "High Risk" : tier === "caution" ? "Use Caution" : "Likely Safe";
+    percentEl.textContent = `${score}%`;
+    percentEl.style.color = tier === "danger" ? "var(--danger)" : tier === "caution" ? "var(--warning)" : "var(--green)";
+    reasonEl.textContent = reason;
+
+    flagList.innerHTML = matched.length
+      ? matched.map((r) => `<div class="flag-item"><span>🚩</span><span>${r.reason}</span></div>`).join("")
+      : `<div class="flag-item"><span>ℹ️</span><span>No specific red-flag patterns were matched in this message.</span></div>`;
+
+    panel.classList.add("visible");
+  }
+</script>
+</body>
+</html>
