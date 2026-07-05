@@ -8,13 +8,9 @@
 
 <title>QR Shield Scanner | CyberShield AI</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="../style.css">
 
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://unpkg.com/@zxing/browser@latest"></script>
 
 </head>
 
@@ -25,128 +21,112 @@
 <div class="container">
 
 <a href="../index.html" class="brand">
-
 CyberShield AI
-
 </a>
 
 <ul class="nav-links">
-
 <li><a href="../index.html">Home</a></li>
-
 <li><a href="ai-guardian.html">AI Guardian</a></li>
-
 <li><a href="scam-detector.html">Scam Detector</a></li>
-
-<li><a href="qr-scanner.html" class="active">QR Shield Scanner</a></li>
-
-<li><a href="cyber-time-machine.html">Cyber Time Machine</a></li>
-
+<li><a href="qr-scanner.html" class="active">QR Scanner</a></li>
+<li><a href="cyber-time-machine.html">Time Machine</a></li>
 <li><a href="digital-mistake-predictor.html">Mistake Predictor</a></li>
-
 <li><a href="emergency-kit.html">Emergency Kit</a></li>
-
 </ul>
 
 </div>
 
 </nav>
 
-<header class="page-header container">
+<section class="section container">
 
-<span class="eyebrow">Tool 03</span>
+<div class="card">
 
 <h1>QR Shield Scanner</h1>
 
 <p>
 
-Scan suspicious QR codes before opening them.
-
-Detect phishing links, fake payment requests,
-
-bank scams and malicious websites.
+Scan any QR Code and instantly identify
+its purpose, detect phishing attempts,
+payment scams, fake login pages,
+malicious websites and suspicious links.
 
 </p>
 
-</header>
+<br>
 
-<section class="section container" style="max-width:800px;margin:auto;">
-
-<div class="card">
-
-<h2>Camera Scanner</h2>
-
-<div id="reader" style="width:350px;margin:auto;"></div>
+<video
+id="reader"
+autoplay
+playsinline
+style="
+width:100%;
+max-width:420px;
+border-radius:15px;
+background:black;
+display:block;
+margin:auto;
+">
+</video>
 
 <br>
 
-<button class="btn btn-primary" id="start-camera">
+<button
+id="start-camera"
+class="btn btn-primary">
 
-Start Camera
+📷 Start Camera
 
 </button>
 
-<hr style="margin:40px 0;">
+<button
+id="stop-camera"
+class="btn btn-secondary">
 
-<h2>Upload QR Image</h2>
+⏹ Stop Camera
+
+</button>
+
+<br><br>
 
 <input
-
 type="file"
-
 id="qr-image"
+accept="image/*">
 
-accept="image/*"
+<br><br>
 
->
-
-<div id="result-card" class="card" style="margin-top:35px;display:none;">
+<div id="result-card" style="display:none;">
 
 <h2>Scan Result</h2>
 
-<p>
-
-<b>QR Content</b>
-
-</p>
-
 <p id="qr-content"></p>
 
-<br>
-
-<p>
-
-<b>Threat Level</b>
-
-</p>
-
-<h2 id="risk-level"></h2>
-
-<p>
-
-<b>Risk Score</b>
-
-</p>
-
-<div style="background:#222;height:18px;border-radius:20px;overflow:hidden;">
+<h3 id="risk-level"></h3>
 
 <div
+style="
+height:20px;
+background:#333;
+border-radius:25px;
+overflow:hidden;
+">
 
+<div
 id="risk-bar"
-
-style="height:100%;width:0%;background:red;">
-
+style="
+height:100%;
+width:0%;
+background:green;
+transition:.4s;
+">
 </div>
 
 </div>
 
 <br>
 
-<h3>Recommendations</h3>
-
-<ul id="tips">
-
-</ul>
+<ul id="tips"></ul>
 
 </div>
 
@@ -156,201 +136,67 @@ style="height:100%;width:0%;background:red;">
 
 <script>
 
-const suspiciousWords=[
+let codeReader;
+let controls;
+async function startScanner(){
 
-"bit.ly",
+try{
 
-"tinyurl",
+codeReader = new ZXing.BrowserQRCodeReader();
 
-"t.ly",
+const devices = await ZXing.BrowserCodeReader.listVideoInputDevices();
 
-"http://",
+console.log(devices);
 
-"login",
+if(devices.length===0){
 
-"verify",
-
-"otp",
-
-"bank",
-
-"upi",
-
-"reward",
-
-"gift",
-
-"wallet",
-
-"payment",
-
-"pay",
-
-"apk"
-
-];
-
-function analyzeQR(text){
-
-let score=0;
-
-let tips=[];
-
-let lower=text.toLowerCase();
-
-suspiciousWords.forEach(word=>{
-
-if(lower.includes(word)){
-
-score+=15;
+alert("No camera found.");
+return;
 
 }
 
-});
+const deviceId = devices[devices.length-1].deviceId;
 
-if(lower.startsWith("http://")){
+controls = await codeReader.decodeFromVideoDevice(
 
-score+=25;
+deviceId,
+document.getElementById("reader"),
 
-tips.push("Uses insecure HTTP link.");
+(result, err)=>{
 
-}
+if(result){
 
-if(lower.includes("otp")){
-
-tips.push("Never share OTP.");
-
-}
-
-if(lower.includes("bank")){
-
-tips.push("Verify with your bank.");
+analyzeQR(result.getText());
 
 }
 
-if(lower.includes("upi")){
-
-tips.push("Don't send money before verifying.");
-
 }
-
-if(lower.includes("apk")){
-
-tips.push("Never install APK from QR.");
-
-}
-
-if(score>100){
-
-score=100;
-
-}
-
-let level="Likely Safe";
-
-let color="green";
-
-if(score>=60){
-
-level="HIGH RISK";
-
-color="red";
-
-}else if(score>=30){
-
-level="Suspicious";
-
-color="orange";
-
-}
-
-document.getElementById("result-card").style.display="block";
-
-document.getElementById("qr-content").innerText=text;
-
-document.getElementById("risk-level").innerText=level;
-
-document.getElementById("risk-level").style.color=color;
-
-document.getElementById("risk-bar").style.width=score+"%";
-
-document.getElementById("risk-bar").style.background=color;
-
-let html="";
-
-tips.forEach(t=>{
-
-html+="<li>"+t+"</li>";
-
-});
-
-if(html===""){
-
-html="<li>No suspicious patterns detected.</li>";
-
-}
-
-document.getElementById("tips").innerHTML=html;
-
-}
-document.getElementById("start-camera").addEventListener("click",function(){
-
-const scanner=new Html5Qrcode("reader");
-
-scanner.start(
-
-{facingMode:"environment"},
-
-{
-
-fps:10,
-
-qrbox:250
-
-},
-
-function(decodedText){
-
-analyzeQR(decodedText);
-
-scanner.stop();
-
-},
-
-function(error){}
 
 );
 
-});
+}
 
-document.getElementById("qr-image").addEventListener("change",function(e){
+catch(err){
 
-const file=e.target.files[0];
+console.error(err);
 
-if(!file)return;
+alert(err);
 
-const scanner=new Html5Qrcode("reader");
+}
 
-scanner.scanFile(file,true)
+}
+document.getElementById("start-camera").onclick=function(){
 
-.then(function(decodedText){
+startScanner();
 
-analyzeQR(decodedText);
+};
 
-})
+document.getElementById("stop-camera").onclick=function(){
 
-.catch(function(){
+if(controls){
 
-alert("No QR code found in this image.");
+controls.stop();
 
-});
+}
 
-});
-
-</script>
-
-<script src="../script.js"></script>
-
-</body>
-
-</html>
+};
