@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>QR Shield Scanner | CyberShield AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../style.css">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+<div class="container">
+
+<a href="../index.html" class="brand">
+
+CyberShield AI
+
+</a>
+
+<ul class="nav-links">
+
+<li><a href="../index.html">Home</a></li>
+
+<li><a href="ai-guardian.html">AI Guardian</a></li>
+
+<li><a href="scam-detector.html">Scam Detector</a></li>
+
+<li><a href="qr-scanner.html" class="active">QR Shield Scanner</a></li>
+
+<li><a href="cyber-time-machine.html">Cyber Time Machine</a></li>
+
+<li><a href="digital-mistake-predictor.html">Mistake Predictor</a></li>
+
+<li><a href="emergency-kit.html">Emergency Kit</a></li>
+
+</ul>
+
+</div>
+
+</nav>
+
+<header class="page-header container">
+
+<span class="eyebrow">Tool 03</span>
+
+<h1>QR Shield Scanner</h1>
+
+<p>
+
+Scan suspicious QR codes before opening them.
+
+Detect phishing links, fake payment requests,
+
+bank scams and malicious websites.
+
+</p>
+
+</header>
+
+<section class="section container" style="max-width:800px;margin:auto;">
+
+<div class="card">
+
+<h2>Camera Scanner</h2>
+
+<div id="reader" style="width:350px;margin:auto;"></div>
+
+<br>
+
+<button class="btn btn-primary" id="start-camera">
+
+Start Camera
+
+</button>
+
+<hr style="margin:40px 0;">
+
+<h2>Upload QR Image</h2>
+
+<input
+
+type="file"
+
+id="qr-image"
+
+accept="image/*"
+
+>
+
+<div id="result-card" class="card" style="margin-top:35px;display:none;">
+
+<h2>Scan Result</h2>
+
+<p>
+
+<b>QR Content</b>
+
+</p>
+
+<p id="qr-content"></p>
+
+<br>
+
+<p>
+
+<b>Threat Level</b>
+
+</p>
+
+<h2 id="risk-level"></h2>
+
+<p>
+
+<b>Risk Score</b>
+
+</p>
+
+<div style="background:#222;height:18px;border-radius:20px;overflow:hidden;">
+
+<div
+
+id="risk-bar"
+
+style="height:100%;width:0%;background:red;">
+
+</div>
+
+</div>
+
+<br>
+
+<h3>Recommendations</h3>
+
+<ul id="tips">
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<script>
+
+const suspiciousWords=[
+
+"bit.ly",
+
+"tinyurl",
+
+"t.ly",
+
+"http://",
+
+"login",
+
+"verify",
+
+"otp",
+
+"bank",
+
+"upi",
+
+"reward",
+
+"gift",
+
+"wallet",
+
+"payment",
+
+"pay",
+
+"apk"
+
+];
+
+function analyzeQR(text){
+
+let score=0;
+
+let tips=[];
+
+let lower=text.toLowerCase();
+
+suspiciousWords.forEach(word=>{
+
+if(lower.includes(word)){
+
+score+=15;
+
+}
+
+});
+
+if(lower.startsWith("http://")){
+
+score+=25;
+
+tips.push("Uses insecure HTTP link.");
+
+}
+
+if(lower.includes("otp")){
+
+tips.push("Never share OTP.");
+
+}
+
+if(lower.includes("bank")){
+
+tips.push("Verify with your bank.");
+
+}
+
+if(lower.includes("upi")){
+
+tips.push("Don't send money before verifying.");
+
+}
+
+if(lower.includes("apk")){
+
+tips.push("Never install APK from QR.");
+
+}
+
+if(score>100){
+
+score=100;
+
+}
+
+let level="Likely Safe";
+
+let color="green";
+
+if(score>=60){
+
+level="HIGH RISK";
+
+color="red";
+
+}else if(score>=30){
+
+level="Suspicious";
+
+color="orange";
+
+}
+
+document.getElementById("result-card").style.display="block";
+
+document.getElementById("qr-content").innerText=text;
+
+document.getElementById("risk-level").innerText=level;
+
+document.getElementById("risk-level").style.color=color;
+
+document.getElementById("risk-bar").style.width=score+"%";
+
+document.getElementById("risk-bar").style.background=color;
+
+let html="";
+
+tips.forEach(t=>{
+
+html+="<li>"+t+"</li>";
+
+});
+
+if(html===""){
+
+html="<li>No suspicious patterns detected.</li>";
+
+}
+
+document.getElementById("tips").innerHTML=html;
+
+}
+document.getElementById("start-camera").addEventListener("click",function(){
+
+const scanner=new Html5Qrcode("reader");
+
+scanner.start(
+
+{facingMode:"environment"},
+
+{
+
+fps:10,
+
+qrbox:250
+
+},
+
+function(decodedText){
+
+analyzeQR(decodedText);
+
+scanner.stop();
+
+},
+
+function(error){}
+
+);
+
+});
+
+document.getElementById("qr-image").addEventListener("change",function(e){
+
+const file=e.target.files[0];
+
+if(!file)return;
+
+const scanner=new Html5Qrcode("reader");
+
+scanner.scanFile(file,true)
+
+.then(function(decodedText){
+
+analyzeQR(decodedText);
+
+})
+
+.catch(function(){
+
+alert("No QR code found in this image.");
+
+});
+
+});
+
+</script>
+
+<script src="../script.js"></script>
+
+</body>
+
+</html>
