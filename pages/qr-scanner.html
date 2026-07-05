@@ -1,202 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>QR Shield Scanner | CyberShield AI</title>
-
-<link rel="stylesheet" href="../style.css">
-
-<script src="https://unpkg.com/@zxing/browser@latest"></script>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QR Shield Scanner — AI Threat Analysis for Any QR Code | CyberShield AI</title>
+<meta name="description" content="Scan any QR code with your camera or an image, and get an instant AI-powered breakdown of what it does and how risky it is — payments, WiFi, links, contacts and more." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css" />
+<link rel="stylesheet" href="qr-scanner.css" />
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
-
 <body>
 
 <nav class="navbar">
-
-<div class="container">
-
-<a href="../index.html" class="brand">
-CyberShield AI
-</a>
-
-<ul class="nav-links">
-<li><a href="../index.html">Home</a></li>
-<li><a href="ai-guardian.html">AI Guardian</a></li>
-<li><a href="scam-detector.html">Scam Detector</a></li>
-<li><a href="qr-scanner.html" class="active">QR Scanner</a></li>
-<li><a href="cyber-time-machine.html">Time Machine</a></li>
-<li><a href="digital-mistake-predictor.html">Mistake Predictor</a></li>
-<li><a href="emergency-kit.html">Emergency Kit</a></li>
-</ul>
-
-</div>
-
+  <div class="container">
+    <a href="../index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3 L34 9 V19 C34 28 28 34.5 20 37 C12 34.5 6 28 6 19 V9 L20 3Z" stroke="#39ff8c" stroke-width="2" fill="rgba(57,255,140,0.08)"/>
+        <path d="M14 20 L18 24 L27 14" stroke="#39ff8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      CyberShield AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="ai-guardian.html">AI Guardian</a></li>
+      <li><a href="scam-detector.html">Scam Detector</a></li>
+      <li><a href="qr-scanner.html" class="active">QR Scanner</a></li>
+      <li><a href="cyber-time-machine.html">Cyber Time Machine</a></li>
+      <li><a href="digital-mistake-predictor.html">Mistake Predictor</a></li>
+      <li><a href="emergency-kit.html">Emergency Kit</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
 </nav>
 
+<header class="page-header container">
+  <span class="eyebrow">Tool 03</span>
+  <h1>QR Shield Scanner</h1>
+  <p>Scan any QR code with your camera or an image. CyberShield AI decodes it, figures out exactly what it does, and scores how risky it is before you act on it.</p>
+</header>
+
 <section class="section container">
+  <div class="qr-layout">
 
-<div class="card">
+    <!-- ===================== Scanner ===================== -->
+    <div class="card scanner-card">
+      <h3>📷 Scan a QR Code</h3>
+      <p class="text-dim" style="margin-top:6px;font-size:0.9rem;">Use your camera, or upload a photo/screenshot of a QR code.</p>
 
-<h1>QR Shield Scanner</h1>
+      <div class="scanner-stage" id="scanner-stage">
+        <div id="qr-video-region"></div>
 
-<p>
+        <div class="scanner-idle">
+          <div class="idle-icon">📷</div>
+          <p>Camera preview appears here. Tap "Start Camera" to begin scanning.</p>
+        </div>
 
-Scan any QR Code and instantly identify
-its purpose, detect phishing attempts,
-payment scams, fake login pages,
-malicious websites and suspicious links.
+        <div class="viewfinder" aria-hidden="true">
+          <span class="corner tl"></span>
+          <span class="corner tr"></span>
+          <span class="corner bl"></span>
+          <span class="corner br"></span>
+          <span class="scanline"></span>
+        </div>
+      </div>
 
-</p>
+      <div class="scan-status" id="scan-status">Camera is off.</div>
 
-<br>
+      <div class="scanner-controls">
+        <button id="start-camera" class="btn btn-primary btn-sm">📷 Start Camera</button>
+        <button id="stop-camera" class="btn btn-ghost btn-sm">⏹ Stop</button>
+        <button id="switch-camera" class="btn btn-ghost icon-btn" title="Switch camera" aria-label="Switch camera">🔄</button>
+        <button id="toggle-torch" class="btn btn-ghost icon-btn" title="Toggle flashlight" aria-label="Toggle flashlight" aria-pressed="false">🔦</button>
+      </div>
 
-<video
-id="reader"
-autoplay
-playsinline
-style="
-width:100%;
-max-width:420px;
-border-radius:15px;
-background:black;
-display:block;
-margin:auto;
-">
-</video>
+      <div class="camera-select" id="camera-select-wrap" style="display:none;">
+        <select id="camera-select" aria-label="Choose camera"></select>
+      </div>
 
-<br>
+      <div class="upload-row">
+        <div class="file-drop btn btn-ghost btn-block btn-sm" style="position:relative;text-align:center;">
+          🖼️ Upload QR Image
+          <input type="file" id="qr-image" accept="image/*">
+        </div>
+      </div>
 
-<button
-id="start-camera"
-class="btn btn-primary">
+      <div class="recent-scans" id="recent-scans" style="display:none;">
+        <div class="section-label" style="margin-top:26px;">Recent Scans</div>
+        <div class="recent-list" id="recent-list"></div>
+        <button class="clear-history" id="clear-history">Clear history</button>
+      </div>
+    </div>
 
-📷 Start Camera
+    <!-- ===================== Results ===================== -->
+    <div class="card qr-results">
+      <h3>🛡️ AI Analysis</h3>
 
-</button>
+      <div class="results-placeholder" id="results-placeholder">
+        <div class="ph-icon">🔍</div>
+        <p>Scan a QR code to see its type, destination, and AI-generated risk score here.</p>
+      </div>
 
-<button
-id="stop-camera"
-class="btn btn-secondary">
+      <div class="qr-report" id="qr-report"></div>
+    </div>
 
-⏹ Stop Camera
-
-</button>
-
-<br><br>
-
-<input
-type="file"
-id="qr-image"
-accept="image/*">
-
-<br><br>
-
-<div id="result-card" style="display:none;">
-
-<h2>Scan Result</h2>
-
-<p id="qr-content"></p>
-
-<h3 id="risk-level"></h3>
-
-<div
-style="
-height:20px;
-background:#333;
-border-radius:25px;
-overflow:hidden;
-">
-
-<div
-id="risk-bar"
-style="
-height:100%;
-width:0%;
-background:green;
-transition:.4s;
-">
-</div>
-
-</div>
-
-<br>
-
-<ul id="tips"></ul>
-
-</div>
-
-</div>
-
+  </div>
 </section>
 
-<script>
+<footer>
+  <div class="container">
+    <span>© <span data-year></span> CyberShield AI. Made with ❤️ for a safer internet.</span>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="#">Portfolio</a>
+      <a href="../README.md">Open Source</a>
+    </div>
+  </div>
+</footer>
 
-let codeReader;
-let controls;
-async function startScanner(){
-
-try{
-
-codeReader = new ZXing.BrowserQRCodeReader();
-
-const devices = await ZXing.BrowserCodeReader.listVideoInputDevices();
-
-console.log(devices);
-
-if(devices.length===0){
-
-alert("No camera found.");
-return;
-
-}
-
-const deviceId = devices[devices.length-1].deviceId;
-
-controls = await codeReader.decodeFromVideoDevice(
-
-deviceId,
-document.getElementById("reader"),
-
-(result, err)=>{
-
-if(result){
-
-analyzeQR(result.getText());
-
-}
-
-}
-
-);
-
-}
-
-catch(err){
-
-console.error(err);
-
-alert(err);
-
-}
-
-}
-document.getElementById("start-camera").onclick=function(){
-
-startScanner();
-
-};
-
-document.getElementById("stop-camera").onclick=function(){
-
-if(controls){
-
-controls.stop();
-
-}
-
-};
+<script src="../script.js"></script>
+<script src="qr-scanner.js"></script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+/* ==========================================================================
+   QR Shield Scanner — page-specific styles
+   Built entirely on top of the shared design tokens in ../style.css
+   (--bg, --surface, --green, --violet, --danger, --warning, etc.)
+   ========================================================================== */
+
+.qr-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 1.3fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 940px) {
+  .qr-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Scanner card ---------- */
+
+.scanner-card {
+  position: sticky;
+  top: calc(var(--nav-h) + 20px);
+}
+
+@media (max-width: 940px) {
+  .scanner-card {
+    position: static;
+  }
+}
+
+.scanner-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 420px;
+  margin: 0 auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #01030a;
+  border: 1px solid var(--border);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+#qr-video-region {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#qr-video-region video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Laptop/webcam front cameras are typically mirrored at the driver level
+   for a "look in a mirror" selfie feel. That's wrong for a QR scanner —
+   we want the preview to move the same direction as the real world.
+   This class is toggled on by JS once we detect a front-facing camera. */
+#qr-video-region.mirror-fix video {
+  transform: scaleX(-1);
+}
+
+/* html5-qrcode injects its own scan-region border/canvas; neutralize it
+   so our themed viewfinder is the only visible frame */
+#qr-video-region img,
+#qr-video-region > div {
+  border: none !important;
+}
+
+.scanner-idle {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 24px;
+  background: radial-gradient(circle at 50% 40%, rgba(139, 107, 255, 0.08), transparent 65%);
+  transition: opacity 0.3s ease;
+}
+
+.scanner-idle .idle-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--violet-dim);
+  color: var(--violet);
+  font-size: 1.6rem;
+}
+
+.scanner-idle p {
+  color: var(--text-dim);
+  font-size: 0.86rem;
+  max-width: 260px;
+}
+
+.scanner-stage.is-active .scanner-idle {
+  display: none;
+}
+
+/* Viewfinder corners + scanline, shown only while camera is live */
+.viewfinder {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.scanner-stage.is-active .viewfinder {
+  opacity: 1;
+}
+
+.viewfinder .frame {
+  position: absolute;
+  top: 12%;
+  left: 12%;
+  right: 12%;
+  bottom: 12%;
+  border-radius: 20px;
+  box-shadow: 0 0 0 2000px rgba(1, 3, 10, 0.35);
+}
+
+.viewfinder .corner {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--green);
+  filter: drop-shadow(0 0 6px rgba(57, 255, 140, 0.7));
+}
+
+.viewfinder .corner.tl { top: 12%; left: 12%; border-right: none; border-bottom: none; border-top-left-radius: 14px; }
+.viewfinder .corner.tr { top: 12%; right: 12%; border-left: none; border-bottom: none; border-top-right-radius: 14px; }
+.viewfinder .corner.bl { bottom: 12%; left: 12%; border-right: none; border-top: none; border-bottom-left-radius: 14px; }
+.viewfinder .corner.br { bottom: 12%; right: 12%; border-left: none; border-top: none; border-bottom-right-radius: 14px; }
+
+.viewfinder .scanline {
+  position: absolute;
+  left: 13%;
+  right: 13%;
+  top: 12%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  box-shadow: 0 0 12px 2px rgba(57, 255, 140, 0.8);
+  animation: scanmove 2.2s ease-in-out infinite;
+}
+
+@keyframes scanmove {
+  0%   { top: 12%; opacity: 0; }
+  8%   { opacity: 1; }
+  50%  { top: 85%; opacity: 1; }
+  92%  { opacity: 1; }
+  100% { top: 12%; opacity: 0; }
+}
+
+/* Success flash when a code is decoded */
+.scanner-stage.scan-success::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: rgba(57, 255, 140, 0.28);
+  animation: flashOut 0.55s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes flashOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.scan-status {
+  margin-top: 16px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  min-height: 20px;
+}
+
+.scan-status.is-live { color: var(--green); }
+.scan-status.is-error { color: var(--danger); }
+
+.scanner-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.scanner-controls .btn svg,
+.scanner-controls .btn span.ico {
+  line-height: 1;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.icon-btn[aria-pressed="true"] {
+  background: var(--green-dim);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.upload-row {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.file-drop {
+  position: relative;
+  width: 100%;
+}
+
+.file-drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.camera-select {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.camera-select select {
+  background: var(--surface-strong);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  max-width: 100%;
+}
+
+/* ---------- Results panel ---------- */
+
+.qr-results {
+  min-height: 320px;
+}
+
+.results-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 70px 24px;
+  color: var(--text-faint);
+}
+
+.results-placeholder .ph-icon {
+  font-size: 2.2rem;
+  opacity: 0.6;
+}
+
+.qr-report {
+  display: none;
+  flex-direction: column;
+  gap: 22px;
+  animation: fadeUp 0.45s ease both;
+}
+
+.qr-report.visible {
+  display: flex;
+}
+
+.report-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.report-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.report-type .type-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--violet-dim);
+  color: var(--violet);
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.report-type .type-text .t-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.report-type .type-text .t-value {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* Risk badges — extends the base .risk-badge from style.css with two
+   extra tiers (Low / High) to give the requested 5-level scale */
+.risk-badge.low { background: rgba(59, 157, 255, 0.14); color: var(--blue); }
+.risk-badge.high { background: rgba(255, 140, 66, 0.16); color: #ff8c42; }
+.risk-badge.critical {
+  background: var(--danger-dim);
+  color: var(--danger);
+  animation: criticalPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes criticalPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 77, 106, 0.35); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 77, 106, 0); }
+}
+
+.risk-meter-block {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.risk-dial {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  min-width: 84px;
+}
+
+.risk-meter-track {
+  flex: 1;
+  height: 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.risk-meter-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 8px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease;
+}
+
+.verdict-line {
+  font-size: 0.94rem;
+  color: var(--text-dim);
+}
+
+.verdict-line strong {
+  color: var(--text);
+}
+
+/* Details grid — key/value facts for the parsed QR payload */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 520px) {
+  .detail-grid { grid-template-columns: 1fr; }
+}
+
+.detail-item {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  min-width: 0;
+}
+
+.detail-item .d-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 4px;
+}
+
+.detail-item .d-value {
+  font-size: 0.9rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.detail-item .d-value.mono {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+}
+
+.raw-payload {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  max-height: 130px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.suggestion-block {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.9rem;
+}
+
+.suggestion-block .s-icon { flex-shrink: 0; }
+
+/* Recent scans */
+.recent-scans {
+  margin-top: 26px;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  font-size: 0.84rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.recent-item:hover {
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.recent-item .r-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.recent-item .r-badge {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.clear-history {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.clear-history:hover { color: var(--text-dim); }
