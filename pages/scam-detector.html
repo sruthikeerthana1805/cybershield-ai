@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css" />
 </head>
+<script src="https://unpkg.com/html5-qrcode"></script>
 <body>
 
 <nav class="navbar">
@@ -49,7 +50,26 @@
       <button class="btn btn-primary" id="analyze-btn">Analyze Message</button>
       <button class="btn btn-ghost" id="sample-btn">Load a sample scam</button>
     </div>
+    <hr style="margin:35px 0;">
 
+<h3>📷 QR Scam Scanner</h3>
+
+<p>Scan a QR code using your camera or upload an image.</p>
+
+<div id="reader" style="width:320px;margin:20px auto;"></div>
+
+    <button class="btn btn-primary" id="start-qr">
+    Start Camera Scanner
+    </button>
+
+    <input
+    type="file"
+    id="qr-image"
+    accept="image/*"
+    style="margin-top:20px;"
+    >
+
+    <div id="qr-result" style="margin-top:25px;"></div>
     <div class="result-panel" id="result-panel">
       <div class="mt-40">
         <span class="risk-badge" id="risk-badge">—</span>
